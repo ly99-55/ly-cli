@@ -1,7 +1,8 @@
 import simpleGit, { SimpleGit, SimpleGitOptions } from 'simple-git';
+import path from 'path';
+import fs from 'fs-extra';
 import createLogger from 'progress-estimator';
 import chalk from 'chalk';
-import figlet from 'figlet';
 import log from './log';
 // 初始化进度条
 const logger = createLogger({
@@ -14,16 +15,12 @@ const logger = createLogger({
     },
 });
 
-const goodPrinter = async () => {
-    const data = await figlet('ly-cli');
-    console.log(chalk.rgb(40, 156, 193).visible(data));
-};
-
 const gitOptions: Partial<SimpleGitOptions> = {
     baseDir: process.cwd(), // 当前工作目录
     binary: 'git', // 指定 git 二进制文件路径
     maxConcurrentProcesses: 6, // 最大并发进程数
 };
+
 export const clone = async (
     url: string,
     projectName: string,
@@ -31,11 +28,12 @@ export const clone = async (
 ) => {
     const git: SimpleGit = simpleGit(gitOptions);
     try {
+         const filePath = path.resolve(process.cwd(), projectName);
+         const targetFile = path.join(filePath, '.git');
         await logger(git.clone(url, projectName, options), '代码下载中: ', {
-            estimate: 7000, // 预计下载时间
+            estimate: 20000, // 预计下载时间
         });
         // 下面就是一些相关的提示
-        goodPrinter();
         console.log();
         console.log(chalk.blueBright(`==================================`));
         console.log(chalk.blueBright(`=== 欢迎使用 ly-cli 脚手架 ===`));
@@ -47,8 +45,14 @@ export const clone = async (
         log.info(`cd ${chalk.blueBright(projectName)}`);
         log.info(`${chalk.yellow('pnpm')} install`);
         log.info(`${chalk.yellow('pnpm')} run dev`);
+
+
+        // 删除.git文件夹
+        if(fs.existsSync(targetFile)){
+            fs.remove(targetFile)
+        }
     } catch (error) {
         log.error(chalk.red('代码下载失败'));
-        // console.log(error);
+        //     // console.log(error);
     }
 };
