@@ -1,18 +1,27 @@
 {
   "name": "lyly-cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "ly-cli 脚手架",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup -c rollup.config.js --bundleConfigAsCjs"
   },
-  "keywords": ["Vite","Vue3","Typescript","Element-Plus"],
+  "keywords": [
+    "Vite",
+    "Vue3",
+    "Typescript",
+    "Element-Plus"
+  ],
   "author": "ly",
-  "bin":{
-    "ly":"bin/index.js"
+  "bin": {
+    "ly": "bin/index.js"
   },
-  "files": ["dist","bin","README.md"],
+  "files": [
+    "dist",
+    "bin",
+    "README.md"
+  ],
   "license": "ISC",
   "devDependencies": {
     "@inquirer/prompts": "^7.4.1",
