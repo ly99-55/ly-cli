@@ -1,41 +1,54 @@
-import simpleGit,{SimpleGitOptions} from 'simple-git'
-import createLogger from 'progress-estimator'
+import simpleGit, { SimpleGit, SimpleGitOptions } from 'simple-git';
+import createLogger from 'progress-estimator';
 import chalk from 'chalk';
-
+import figlet from 'figlet';
+import log from './log';
+// 初始化进度条
 const logger = createLogger({
-    spinner:{
-        interval:100,
-        frames:['#','#','#','#'].map((item)=>{
-            return chalk.green(item)
-        }),
-    }
+    spinner: {
+        interval: 300,
+        frames: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'].map((item) =>
+            // console.info(item)
+            chalk.green(item)
+        ),
+    },
 });
 
-//Partial 将原来的类型转换成可选类型，也就是将所有属性变为可选项
-const gitOptions:Partial<SimpleGitOptions> = {
-    baseDir:process.cwd(), //当前工作目录
-    binary:'git', //git命令的路径还有http的
-    maxConcurrentProcesses:6, //最大并发数
-}
+const goodPrinter = async () => {
+    const data = await figlet('ly-cli');
+    console.log(chalk.rgb(40, 156, 193).visible(data));
+};
 
-export const clone = async (url:string,projectName:string,options:string[])=>{
-    const git = simpleGit(gitOptions);
-    try{
-        await logger(git.clone(url,projectName,options),'代码下载中...',{
-            estimate:1000*60, //预计时间
-        })
-        console.log()
-        console.log(chalk.green(`✨ Project creation complete!`))
-        console.log(chalk.blackBright('=================='))
-        console.log(chalk.blackBright('== welcom ly-cli =='))
-        console.log(chalk.blackBright('=================='))
-        console.log()
-        console.log(chalk.blackBright('To get started:'))
-        console.log(chalk.blackBright(`cd ${projectName}`))
-        console.log(chalk.blackBright('pnpm install'))
-        console.log(chalk.blackBright('pnpm dev'))
-    }catch(err){
-        console.log(err)
-        console.log(chalk.red('代码下载失败'))
+const gitOptions: Partial<SimpleGitOptions> = {
+    baseDir: process.cwd(), // 当前工作目录
+    binary: 'git', // 指定 git 二进制文件路径
+    maxConcurrentProcesses: 6, // 最大并发进程数
+};
+export const clone = async (
+    url: string,
+    projectName: string,
+    options: string[]
+) => {
+    const git: SimpleGit = simpleGit(gitOptions);
+    try {
+        await logger(git.clone(url, projectName, options), '代码下载中: ', {
+            estimate: 7000, // 预计下载时间
+        });
+        // 下面就是一些相关的提示
+        goodPrinter();
+        console.log();
+        console.log(chalk.blueBright(`==================================`));
+        console.log(chalk.blueBright(`=== 欢迎使用 ly-cli 脚手架 ===`));
+        console.log(chalk.blueBright(`==================================`));
+        console.log();
+
+        log.success(`项目创建成功 ${chalk.blueBright(projectName)}`);
+        log.success(`执行以下命令启动项目：`);
+        log.info(`cd ${chalk.blueBright(projectName)}`);
+        log.info(`${chalk.yellow('pnpm')} install`);
+        log.info(`${chalk.yellow('pnpm')} run dev`);
+    } catch (error) {
+        log.error(chalk.red('代码下载失败'));
+        // console.log(error);
     }
-}
+};
