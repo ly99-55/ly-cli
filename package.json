@@ -1,7 +1,7 @@
 {
   "name": "lyly-cli",
-  "version": "0.0.2",
-  "description": "lyly-cli 脚手架",
+  "version": "0.0.3",
+  "description": "ly-cli 脚手架",
   "main": "index.js",
   "scripts": {
       "test": "echo \"Error: no test specified\" && exit 1",
