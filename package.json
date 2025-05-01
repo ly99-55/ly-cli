@@ -1,5 +1,5 @@
 {
-  "name": "ly-cli",
+  "name": "lyly-cli",
   "version": "0.0.1",
   "description": "ly-cli 脚手架",
   "main": "index.js",

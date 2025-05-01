@@ -15,11 +15,13 @@ npm install ly-cli -g
 ```
 ## 使用
 
-
 ```bash
 # 使用模板创建新项目
 ly-cli create <projectName>
 ```
+
 # 查看脚手架版本
+```bash
 ly -v
 ly --version
+```
